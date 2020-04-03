@@ -1,10 +1,18 @@
 import { NowRequest, NowResponse } from '@now/node'
+import axios from 'axios';
 
-module.exports = (req: NowRequest, res: NowResponse) => {
-  console.log('Working!')
-  res.json({
-    body: req.body,
-    query: req.query,
-    cookies: req.cookies
-  })
+module.exports = async (req: NowRequest, res: NowResponse) => {
+  if (req.body && req.body.url) {
+    const response: any = await axios
+      .get(req.body.url)
+      .then(({ data }) => {
+        return data
+      })
+
+    res.json({...response})
+    return;
+  }
+
+  res.json({ error: true })
+  
 }
