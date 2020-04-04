@@ -27,7 +27,6 @@ const onHover = (data, globalData, setToolTip) => {
 
     const { x, y, object: { id, properties } } = data;
     const mappedProps = globalData.find(d => d.name === properties.name)
-    console.log(mappedProps)
     // const mappedProps = {
     //   name: properties.name,
     //   confirmed: properties.nombre_total_de_cas,

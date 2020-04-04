@@ -113,7 +113,7 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route path="/:tab(map)"  component={Home} exact={true} />
+            <Route path="/:tab(map)" render={() => <Home metrics={metrics} setMetrics={setMetrics} />}  exact={true} />
             <Route path="/:tab(statistics)" render={() => <Tab1 metrics={metrics} setMetrics={setMetrics} />} exact={true} />
             <Route path="/:tab(charts)" render={() => <Tab2 metrics={metrics} setMetrics={setMetrics} />} exact={true} />
             <Route path="/:tab(news)" component={Tab3} exact={true} />
