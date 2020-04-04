@@ -20,7 +20,7 @@ import LeftPanel from '../components/LeftPanel';
 // import CenterPanel from '../components/CenterPanel';
 import Map from '../components/Map';
 import { getFillColor, onHover } from '../utils';
-import { COVID_DATA_ENDPOINT } from '../constants'
+import { COVID_DATA_ENDPOINT, MINI_PROXY_ENDPOINT } from '../constants'
 import REGIONS from '../geo/regions.json';
 import HOSPITALS from '../geo/hospitals.json';
 import PHARMACIES from '../geo/pharmacies.json';
@@ -45,14 +45,14 @@ const initialViewState = {
 interface FeatureData {
   "type": string;
   "id": string;
-  "geometry": {
+  "geometry"?: {
     "type": string;
     "coordinates": [
       number,
       number
     ]
   };
-  "geometry_name": string;
+  "geometry_name"?: string;
   "properties": {
     "osm_id": string;
     "reg_ref_cog": string;
@@ -115,11 +115,13 @@ const Home: React.FC = () => {
       try {
         
         const [{ data: { type, features } }] = await Promise.all([
-          axios.get<{ type: string, features: FeatureData[] }>(COVID_DATA_ENDPOINT)
+          axios.post<{ type: string, features: FeatureData[] }>(MINI_PROXY_ENDPOINT, { url: COVID_DATA_ENDPOINT})
         ]);
 
-        console.log({ type, features })
-
+        
+        // const features: FeatureData[] = [{ "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e2c",  "properties": { "osm_id": "1", "reg_ref_cog": "CM001", "name": "Adamaoua", "pop_estim_2020": "1360655", "nombre_total_de_cas": 0, "nombre_de_victimes": 0, "nombre_de_personnes_retablies": 0 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e2d",  "properties": { "osm_id": "2", "reg_ref_cog": "CM002", "name": "Centre", "pop_estim_2020": "5403531", "nombre_total_de_cas": 230, "nombre_de_victimes": 6, "nombre_de_personnes_retablies": 17 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e2e",  "properties": { "osm_id": "3", "reg_ref_cog": "CM003", "name": "Est", "pop_estim_2020": "1016707", "nombre_total_de_cas": 0, "nombre_de_victimes": 0, "nombre_de_personnes_retablies": 0 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e2f",  "properties": { "osm_id": "4", "reg_ref_cog": "CM004", "name": "Extrême-Nord", "pop_estim_2020": "4482315", "nombre_total_de_cas": 0, "nombre_de_victimes": 0, "nombre_de_personnes_retablies": 0 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e30",  "properties": { "osm_id": "5", "reg_ref_cog": "CM005", "name": "Littoral", "pop_estim_2020": "4222616", "nombre_total_de_cas": 268, "nombre_de_victimes": 1, "nombre_de_personnes_retablies": 0 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e31",  "properties": { "osm_id": "6", "reg_ref_cog": "CM006", "name": "Nord", "pop_estim_2020": "2889247", "nombre_total_de_cas": 0, "nombre_de_victimes": 0, "nombre_de_personnes_retablies": 0 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e32",  "properties": { "osm_id": "7", "reg_ref_cog": "CM007", "name": "Nord-Ouest", "pop_estim_2020": "2186144", "nombre_total_de_cas": 0, "nombre_de_victimes": 0, "nombre_de_personnes_retablies": 0 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e33",  "properties": { "osm_id": "8", "reg_ref_cog": "CM009", "name": "Sud", "pop_estim_2020": "927007", "nombre_total_de_cas": 0, "nombre_de_victimes": 0, "nombre_de_personnes_retablies": 0 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e34",  "properties": { "osm_id": "9", "reg_ref_cog": "CM010", "name": "Sud-Ouest", "pop_estim_2020": "1822484", "nombre_total_de_cas": 3, "nombre_de_victimes": 1, "nombre_de_personnes_retablies": 0 } }, { "type": "Feature", "id": "regions_view.fid--79f94bfd_171412a2335_e35",  "properties": { "osm_id": "10", "reg_ref_cog": "CM008", "name": "Ouest", "pop_estim_2020": "2022251", "nombre_total_de_cas": 8, "nombre_de_victimes": 0, "nombre_de_personnes_retablies": 0 } }]
+        // console.log({ features })
+        
         const globalData: GlobalData[] = []
 
         features.forEach((d:FeatureData) => {
@@ -151,7 +153,6 @@ const Home: React.FC = () => {
       return null;
     }
     const { x, y, id, name, data: { confirmed = 0, deaths = 0, recovered = 0, lastUpdate = null } = {} } = toolTipData;
-    console.log(toolTipData)
     return (
       <React.Fragment>
         <BrowserView>
@@ -182,16 +183,18 @@ const Home: React.FC = () => {
       data: geoJson,
       highlightColor: [0, 0, 0, 50],
       autoHighlight: true,
-      getFillColor: (d: any) => getFillColor(d.properties.nombre_total_de_cas),
+      getFillColor: (data: any) => getFillColor(data, globalData),
       updateTriggers: {
         getFillColor: [globalData]
       },
       stroked: true,
       filled: true,
+      strokeColor: [255, 0, 0],
+      getStrokeColor: () => [0, 0, 0, 255],
 
       /* interact */
       pickable: true,
-      onHover: (data: any) => onHover(data, setToolTip),
+      onHover: (data: any) => onHover(data, globalData, setToolTip),
       onClick: (data: any) => {
         
         console.log('clicked:', data)
