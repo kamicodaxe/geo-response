@@ -16,15 +16,13 @@ import {
 
 import './Home.css';
 
-import LeftPanel from '../components/LeftPanel';
-// import CenterPanel from '../components/CenterPanel';
-import Map from '../components/Map';
 import { getFillColor, onHover } from '../utils';
 import { COVID_DATA_ENDPOINT, MINI_PROXY_ENDPOINT } from '../constants'
 import REGIONS from '../geo/regions.json';
 import HOSPITALS from '../geo/hospitals.json';
 import PHARMACIES from '../geo/pharmacies.json';
 import POLICE_STATIONS from '../geo/police-stations.json';
+
 
 // import RightPanel from '../components/RightPanel';
 

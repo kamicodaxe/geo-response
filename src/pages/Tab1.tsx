@@ -4,7 +4,13 @@ import ExploreContainer from '../components/ExploreContainer';
 import './Tab1.css';
 import LeftPanel from '../components/LeftPanel';
 
-const Tab1: React.FC = () => {
+interface ContainerProps {
+  metrics: any,
+  setMetrics: any
+}
+
+
+const Tab1: React.FC<ContainerProps> = ({ metrics, setMetrics }) => {
   return (
     <IonPage>
       {/* <IonHeader>
@@ -18,7 +24,7 @@ const Tab1: React.FC = () => {
             <IonTitle size="large">Tab 1</IonTitle>
           </IonToolbar>
         </IonHeader> */}
-        <LeftPanel />
+        <LeftPanel metrics={metrics} setMetrics={setMetrics} />
       </IonContent>
     </IonPage>
   );

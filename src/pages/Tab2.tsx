@@ -9,24 +9,27 @@ import METRICS from '../geo/metrics.json'
 
 interface DataItem {
   town: string;
-  active: number;
+  confirmed: number;
   recovered: number;
   death: number;
 }
 
+
+interface ContainerProps {
+  metrics: any,
+  setMetrics: any
+}
+
 const mapMmetrics = (m: any) => ({
-  town: m.properties.name,
-  active: m.properties.nombre_total_de_cas,
-  recovered: m.properties.nombre_de_personnes_retablies,
-  death: m.properties.nombre_de_victimes
+  ...m
 })
 
-const data: any[] = METRICS.map(mapMmetrics).sort((a, b) => a.active > b.active ? -1 : +1 ).filter(i => (
-  i.active != 0 || i.recovered != 0 || i.death != 0
-))
+const Tab2: React.FC<ContainerProps> = ({ metrics, setMetrics }) => {
+  let data = []
+  if (metrics.length > 0) {
+    data = metrics.map(mapMmetrics).sort((a: any, b: any) => a.confirmed > b.confirmed ? -1 : +1);
+  }
 
-
-const Tab2: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -59,11 +62,11 @@ const Tab2: React.FC = () => {
 
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="town" />
+              <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="active" fill="#EA8C35" />
+              <Bar dataKey="confirmed" fill="#EA8C35" />
               <Bar dataKey="death" fill="#B50122" />
               <Bar dataKey="recovered" fill="#08725F" />
             </BarChart>
