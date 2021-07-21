@@ -59,12 +59,17 @@ ion-grid ion-col {
   border-radius: 8px;
   overflow-y: hidden;
 }
+.tooltip div {
+  flex: 1
+}
 
-.tooltip img {
+.tooltip .images {
+  overflow-y: scroll;
+}
+
+.images img {
   width: auto;
   height: 180px;
 }
 
-.tooltip div:first-child {
-  padding: 16px
-}
+

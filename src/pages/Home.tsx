@@ -99,7 +99,6 @@ class CustomMarker extends React.PureComponent<{ markers: any[] }, {}> {
             longitude={marker.longitude}
             latitude={marker.latitude}
             captureClick
-
           >
             <p>{marker.name}</p>
           </Marker>
@@ -158,9 +157,9 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
           axios.post(url, params, config)
             .then((result) => {
               // Do somthing
-              
+
               let rlt = result.data
-              
+
               if (rlt.status == "OK") {
                 let [number, photos] = [
                   rlt.result.formatted_phone_number,
@@ -171,12 +170,6 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
 
                 console.log(photos[0].photo_reference)
 
-                // Fetch image
-                params.set('url', `https://maps.googleapis.com/maps/api/place/photo?maxwidth=3600&photoreference=${photos[0].photo_reference}&key=AIzaSyCa_pW1E6mw931rPfTIlEBtZ-ZcY4blX1E`)
-                
-                axios.post(url, params, config)
-                  .then(console.log)
-                  .catch(console.log)
 
 
 
@@ -199,13 +192,22 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
     if (!toolTipData) {
       return null;
     }
-    const { properties: { name }, address, placeID, number, photoURI } = toolTipData;
+    const { properties: { name }, address, placeID, number, photoURI, photos } = toolTipData;
     return (
       <React.Fragment>
         <BrowserView>
           <div className="tooltip" >
-            <img
-              src="https://lh3.googleusercontent.com/p/AF1QipP-ifIoz20fBAY6yTPXIxy9DRDTZJb4FjoBp8uW=s1600-w400" alt=""></img>
+            {
+              photos &&
+              <div className="images">
+                {
+                  photos.map((photo: any, idx: any) => (
+                    <img src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=3600&photoreference=${photos[idx].photo_reference}&key=AIzaSyCa_pW1E6mw931rPfTIlEBtZ-ZcY4blX1E`} alt=""></img>
+                  ))
+                }
+
+              </div>
+            }
 
             <div>
               <h2 style={{ margin: '0 0 1rem 0' }}>{name}</h2>
@@ -217,13 +219,27 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
         <MobileView>
           <div style={{ position: 'absolute', zIndex: 5, left: '1rem', right: '1rem', bottom: '1rem', backgroundColor: 'white', padding: '1rem', borderRadius: '4px' }}>
             <h2 style={{ margin: '0 0 1rem 0' }}>{name}</h2>
-            <img src="https://lh3.googleusercontent.com/p/AF1QipP-ifIoz20fBAY6yTPXIxy9DRDTZJb4FjoBp8uW=s1600-w400" alt=""></img>
+            {
+              photos &&
+              <div className="images">
+                {
+                  photos.map((photo: any, idx: any) => (
+                    <img src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=3600&photoreference=${photos[idx].photo_reference}&key=AIzaSyCa_pW1E6mw931rPfTIlEBtZ-ZcY4blX1E`} alt=""></img>
+                  ))
+                }
+
+              </div>
+            }
             <div>{address}</div>
             <div>{number}</div>
           </div>
         </MobileView>
       </React.Fragment>
     );
+  }
+
+  function onLayerClick(data: any) {
+    geocode(data.object)
   }
 
   const layers = [
@@ -262,6 +278,7 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
       pickable: true,
       sizeScale: 30,
       getPosition: (d: any) => d.geometry.coordinates,
+      onClick: (d: any) => onLayerClick(d),
     })
   ]
 
@@ -293,7 +310,7 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
             ></IonSearchbar>
             <IonList>
               {
-                (filtered.length == 0 && HOTELS.length > 0) && HOTELS.map((marker: any, idx: any) => (
+                (filtered.length <= 0 && HOTELS.length > 0) && HOTELS.map((marker: any, idx: any) => (
                   <IonItem
                     key={idx + ''}
                     button
