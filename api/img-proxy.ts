@@ -9,8 +9,8 @@ module.exports = async (req: NowRequest, res: NowResponse) => {
         return data
       })
 
-    res.json({...response})
-
+    res.pipe(response)
+    
     return;
   }
 
