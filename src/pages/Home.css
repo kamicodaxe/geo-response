@@ -42,3 +42,29 @@ ion-grid ion-col {
   justify-content: center;
   align-items: center;
 }
+
+.tooltip {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40px;
+  width: 50%;
+  height: 180px;
+  display: flex;
+  background-color: white;
+  border-radius: 8px;
+  overflow-y: hidden;
+}
+
+.tooltip img {
+  width: auto;
+  height: 180px;
+}
+
+.tooltip div:first-child {
+  padding: 16px
+}

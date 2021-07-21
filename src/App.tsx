@@ -111,9 +111,10 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
             <Route path="/:tab(map)" render={() => <Home metrics={metrics} setMetrics={setMetrics} />}  exact={true} />
+        
+        {/* <IonTabs>
+          <IonRouterOutlet>
             <Route path="/:tab(statistics)" render={() => <Tab1 metrics={metrics} setMetrics={setMetrics} />} exact={true} />
             <Route path="/:tab(charts)" render={() => <Tab2 metrics={metrics} setMetrics={setMetrics} />} exact={true} />
             <Route path="/:tab(news)" component={Tab3} exact={true} />
@@ -138,8 +139,10 @@ const App: React.FC = () => {
               <IonLabel>News</IonLabel>
             </IonTabButton>
           </IonTabBar>
-        </IonTabs>
+        </IonTabs> */}
+
       </IonReactRouter>
+
     </IonApp>
   );
 }
