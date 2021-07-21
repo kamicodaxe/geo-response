@@ -9,7 +9,8 @@ module.exports = async (req: NowRequest, res: NowResponse) => {
         return data
       })
 
-    res.json({...response})
+    // res.json({...response})
+    res.send(response)
     return;
   }
 
