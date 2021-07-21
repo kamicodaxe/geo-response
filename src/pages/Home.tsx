@@ -298,7 +298,7 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
         <IonMenu contentId="main">
           <IonHeader>
             <IonToolbar>
-              <IonTitle>Site touristique du Cameroun</IonTitle>
+              <IonTitle>Sites touristiques du Cameroun</IonTitle>
             </IonToolbar>
           </IonHeader>
           <IonContent>
@@ -393,6 +393,8 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
 
 
           {_renderTooltip()}
+
+          <img className="seal" src={require('../assets/seal.png')} ></img>
 
         </IonContent>
       </IonSplitPane>

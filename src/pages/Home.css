@@ -72,4 +72,13 @@ ion-grid ion-col {
   height: 180px;
 }
 
+.seal {
+  position: absolute;
+  width: 100px;
+  right: 0;
+  top: 0;
+  margin-right: 16px;
+  margin-top: 16px;
+}
+
 
