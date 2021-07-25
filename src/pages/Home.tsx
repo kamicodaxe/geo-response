@@ -133,7 +133,7 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
 
   function geocode(marker: any) {
 
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${marker.properties.name + " ,Cameroun"}&key=AIzaSyCa_pW1E6mw931rPfTIlEBtZ-ZcY4blX1E`)
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${marker.properties.name + " " + marker.properties.town + " ,Cameroun"}&key=AIzaSyCa_pW1E6mw931rPfTIlEBtZ-ZcY4blX1E`)
       .then(r => r.json())
       .then(rlt => {
         if (rlt.status == "OK") {
