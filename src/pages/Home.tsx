@@ -8,7 +8,10 @@ import {
   IonMenu,
   IonList,
   IonItem,
-  IonSearchbar
+  IonSearchbar,
+  IonSelect,
+  IonLabel,
+  IonSelectOption
 } from '@ionic/react';
 import React, { useState, useEffect } from 'react';
 import DeckGL from '@deck.gl/react';
@@ -120,6 +123,7 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
   const [geoJson, setGeoJson] = useState(REGIONS);
   const [toolTipData, setToolTip] = useState<any>(null); // { x, y, id, name, data: { confirmed, deaths, recovered } }
   const [markers, setMarkers] = useState([]);
+  const [cat, setCat] = useState('all');
   const [filtered, setFiltered] = useState<any>([]);
 
   function search(searchString: string) {
@@ -127,9 +131,23 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
       return item.properties.name.toLowerCase().indexOf(searchString.toLowerCase()) > -1
     })
 
-    setFiltered(results)
+    console.log('all')
+
+    if (cat == 'all') return setFiltered(results)
+
+    console.log('notAll')
+
+    return results.filter(item => item.properties.type == cat)
 
   }
+
+  useEffect(() => {
+    if (cat == "all") return setFiltered([]);
+    let results = HOTELS.filter(function (item) {
+      return item.properties.type.toLowerCase().indexOf(cat) > -1
+    })
+    setFiltered(results)
+  }, [cat])
 
   function geocode(marker: any) {
 
@@ -308,6 +326,19 @@ const Home: React.FC<ContainerProps> = ({ metrics }) => {
               // onIonChange={e => setSearchText(e.detail.value!)}
               onIonChange={e => search(e.detail.value!)}
             ></IonSearchbar>
+
+            <IonList>
+              <IonItem>
+                <IonLabel>Catégorie</IonLabel>
+                <IonSelect value={cat} placeholder="Chosir" onIonChange={e => setCat(e.detail.value)}>
+                  <IonSelectOption value="all">Tout</IonSelectOption>
+                  <IonSelectOption value="hotel">Hotels</IonSelectOption>
+                  <IonSelectOption value="restaurant">Restaurants</IonSelectOption>
+                  <IonSelectOption value="monument">Monument</IonSelectOption>
+                </IonSelect>
+              </IonItem>
+            </IonList>
+
             <IonList>
               {
                 (filtered.length <= 0 && HOTELS.length > 0) && HOTELS.map((marker: any, idx: any) => (
